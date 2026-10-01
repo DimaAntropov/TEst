@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ru" data-theme="light" data-accent="violet">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#111522">
+  <meta name="description" content="Онлайн-бронирование билетов кинотеатра">
+  <title>{% block title %}Кинотеатр{% endblock %}</title>
+  <script>
+    (()=>{const p=localStorage.getItem('cinema-theme')||'system';const t=p==='system'?(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'):p;document.documentElement.dataset.theme=t;document.documentElement.dataset.themePreference=p;document.documentElement.dataset.accent=localStorage.getItem('cinema-accent')||'violet'})();
+  </script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script defer src="{{ url_for('static', filename='app.js') }}"></script>
+</head>
+<body>
+<header class="topbar">
+  <div class="container nav">
+    <a class="brand" href="{{ url_for('main.index') }}"><span class="brand-mark">C</span><span>Кинотеатр</span></a>
+    <button class="mobile-menu" type="button" aria-label="Открыть меню" aria-expanded="false">☰</button>
+    <nav id="main-nav">
+      <a href="{{ url_for('main.index') }}">Афиша</a>
+      {% if g.user %}
+        {% if g.user['role']=='admin' %}<a href="{{ url_for('admin.dashboard') }}">Управление</a>{% else %}<a href="{{ url_for('booking.profile') }}">Мои билеты</a>{% endif %}
+        <a class="user" href="{{ url_for('booking.profile') }}" title="Профиль и настройки">{{ g.user['username'] }}</a>
+        <form class="inline" method="post" action="{{ url_for('auth.logout') }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><button class="link-button">Выйти</button></form>
+      {% else %}
+        <a href="{{ url_for('auth.login') }}">Вход</a><a class="nav-accent" href="{{ url_for('auth.register') }}">Регистрация</a>
+      {% endif %}
+      <div class="theme-wrap">
+        <button class="theme-button" id="theme-button" type="button" aria-label="Настроить тему" aria-expanded="false"><span id="theme-icon">◐</span></button>
+        <div class="theme-popover" id="theme-popover" hidden>
+          <strong>Оформление</strong>
+          <div class="theme-options" role="group" aria-label="Тема">
+            <button type="button" data-theme-value="light">☀️ Светлая</button>
+            <button type="button" data-theme-value="dark">🌙 Тёмная</button>
+            <button type="button" data-theme-value="system">💻 Системная</button>
+          </div>
+          <span class="theme-caption">Цвет интерфейса</span>
+          <div class="accent-options" role="group" aria-label="Цвет интерфейса">
+            <button type="button" data-accent-value="violet" aria-label="Фиолетовый"></button>
+            <button type="button" data-accent-value="blue" aria-label="Синий"></button>
+            <button type="button" data-accent-value="emerald" aria-label="Зелёный"></button>
+            <button type="button" data-accent-value="rose" aria-label="Розовый"></button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>
+</header>
+<main class="container">
+  <div class="alerts" aria-live="polite">{% with messages=get_flashed_messages(with_categories=true) %}{% for category,message in messages %}<div class="alert {{ category }}"><span>{{ message }}</span><button type="button" class="alert-close" aria-label="Закрыть">×</button></div>{% endfor %}{% endwith %}</div>
+  {% block content %}{% endblock %}
+</main>
+<footer><div class="container footer-content"><span>© 2026 Кинотеатр</span><span>Flask · SQLite · Безопасное бронирование</span></div></footer>
+<button id="to-top" class="to-top" type="button" aria-label="Наверх">↑</button>
+{% block scripts %}{% endblock %}
+</body>
+</html>

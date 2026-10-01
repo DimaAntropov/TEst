@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block title %}Ошибка {{ code }}{% endblock %}{% block content %}<div class="error-page"><strong>{{ code }}</strong><h1>{{ message }}</h1><p>Вернитесь на главную страницу и попробуйте ещё раз.</p><a class="button" href="{{ url_for('main.index') }}">На главную</a></div>{% endblock %}

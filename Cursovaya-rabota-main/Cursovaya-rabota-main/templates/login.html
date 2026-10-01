@@ -1,0 +1,5 @@
+{% extends 'base.html' %}{% block title %}Вход{% endblock %}{% block content %}
+<div class="auth-card"><h1>Вход</h1><p class="muted">Войдите, чтобы бронировать места.</p>
+<form method="post" class="stack"><input type="hidden" name="csrf_token" value="{{ csrf_token }}"><input type="hidden" name="next" value="{{ next_url }}">
+<label>Логин<input name="username" required autofocus></label><label>Пароль<input type="password" name="password" required></label><button>Войти</button></form>
+<p class="form-foot">Нет учётной записи? <a href="{{ url_for('auth.register') }}">Зарегистрироваться</a></p></div>{% endblock %}

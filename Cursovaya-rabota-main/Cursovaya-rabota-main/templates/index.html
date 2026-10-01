@@ -1,0 +1,18 @@
+{% extends 'base.html' %}{% block title %}Афиша — Кинотеатр{% endblock %}
+{% block content %}
+<section class="hero"><div><p class="eyebrow">ОНЛАЙН-БРОНИРОВАНИЕ</p><h1>Выберите фильм и удобное место</h1><p>Расписание ближайших сеансов. Афиша доступна без регистрации.</p></div></section>
+<form class="filter" method="get"><label class="search-field">Фильм или жанр <input type="search" name="q" value="{{ search }}" placeholder="Например, фантастика"></label><label>Показать на дату <input type="date" name="date" value="{{ date_filter }}"></label><button>Найти</button>{% if date_filter or search %}<a class="button secondary" href="{{ url_for('main.index') }}">Сбросить</a>{% endif %}</form>
+<div class="section-head"><h2>Ближайшие сеансы</h2><span>{{ shows|length }} вариантов</span></div>
+<div class="cards">
+{% for show in shows %}
+<article class="movie-card">
+  <div class="poster"><span>🎞️</span><small>{{ show['genre'] }}</small></div>
+  <div class="movie-body"><h3>{{ show['title'] }}</h3><p class="muted">{{ show['description'] }}</p>
+    <div class="facts"><span>📅 {{ format_dt(show['start_time']) }}</span><span>⏱ {{ show['duration'] }} мин</span><span>📍 {{ show['hall_name'] }}</span></div>
+    <div class="card-bottom"><div><strong>{{ '%.0f'|format(show['price']) }} ₽</strong><small>{{ show['capacity']-show['occupied'] }} мест свободно</small></div>
+    <a class="button" href="{{ url_for('booking.book',session_id=show['id']) }}">Выбрать места</a></div>
+  </div>
+</article>
+{% else %}<div class="empty"><div>🎬</div><h3>Сеансов не найдено</h3><p>Выберите другую дату или добавьте сеансы в панели администратора.</p></div>{% endfor %}
+</div>
+{% endblock %}

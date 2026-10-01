@@ -1,0 +1,10 @@
+{% extends 'base.html' %}{% block title %}Выбор мест — {{ show['title'] }}{% endblock %}
+{% block content %}<a class="back" href="{{ url_for('main.index') }}">← Назад к афише</a>
+<div class="booking-head"><div><p class="eyebrow">ВЫБОР МЕСТ</p><h1>{{ show['title'] }}</h1><p>{{ format_dt(show['start_time']) }} · {{ show['hall_name'] }} · {{ '%.0f'|format(show['price']) }} ₽</p></div><div class="legend"><span><i class="free"></i> свободно</span><span><i class="chosen"></i> выбрано</span><span><i class="busy"></i> занято</span></div></div>
+<form method="post" id="seat-form" data-price="{{ show['price'] }}"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<div class="hall"><div class="screen"><span>ЭКРАН</span></div>
+{% for row in range(1,show['rows_count']+1) %}<div class="seat-row"><b>{{ row }}</b><div class="seats">
+{% for seat in range(1,show['seats_per_row']+1) %}{% set pos=(row,seat) %}<label class="seat {% if pos in occupied %}occupied{% endif %}" title="Ряд {{ row }}, место {{ seat }}"><input type="checkbox" name="seats" value="{{ row }}-{{ seat }}" data-label="{{ row }} ряд, {{ seat }} место" {% if pos in occupied %}disabled{% endif %}><span>{{ seat }}</span></label>{% endfor %}
+</div><b>{{ row }}</b></div>{% endfor %}</div>
+<div class="booking-bar"><div class="selected-info"><small id="seat-names">Места не выбраны</small><strong><span id="seat-count">0</span> мест</strong></div><div><small>Итого</small><strong><span id="total">0</span> ₽</strong></div><button id="book-button" disabled><span>Забронировать</span></button></div></form>
+{% endblock %}

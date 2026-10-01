@@ -1,0 +1,6 @@
+{% extends 'base.html' %}{% block title %}Регистрация{% endblock %}{% block content %}
+<div class="auth-card wide"><h1>Регистрация покупателя</h1><p class="muted">Создайте учётную запись для бронирования билетов.</p>
+<form method="post" class="form-grid"><input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+<label>Логин<input name="username" minlength="3" maxlength="30" required></label><label>Email<input type="email" name="email" required></label>
+<label>Телефон<input type="tel" name="phone" placeholder="+7 999 000-00-00"></label><label>Пароль<input type="password" name="password" minlength="8" required></label>
+<button class="full">Зарегистрироваться</button></form><p class="form-foot">Уже зарегистрированы? <a href="{{ url_for('auth.login') }}">Войти</a></p></div>{% endblock %}
